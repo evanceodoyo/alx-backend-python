@@ -18,5 +18,5 @@ async def task_wait_n(n: int, max_delay: int) -> List[float]:
     Returns:
         List[float]: A sorted list of the times taken for each execution.
     """
-    res = await asyncio.gather(*(task_wait_random(max_delay) for _ in range(n)))
-    return sorted(res)
+    rs = await asyncio.gather(*(task_wait_random(max_delay) for _ in range(n)))
+    return sorted(rs)
