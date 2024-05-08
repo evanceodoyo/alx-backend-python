@@ -2,6 +2,7 @@
 """Annotates mixed type - string and int/float"""
 from typing import Tuple, Union
 
+
 def to_kv(k: str, v: Union[int, float]) -> Tuple[str, float]:
     """
     Convert a 'key-value' pair into a tuple where the value is squared.
