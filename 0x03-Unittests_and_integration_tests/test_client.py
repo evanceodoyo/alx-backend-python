@@ -5,7 +5,7 @@ Module for unit test for `client` module.
 import unittest
 from unittest.mock import MagicMock, PropertyMock, patch
 from typing import Dict
-from parameterized import parameterized, param
+from parameterized import parameterized
 
 
 GithubOrgClient = __import__('client').GithubOrgClient
@@ -110,10 +110,8 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_payload.assert_called_once()
 
     @parameterized.expand([
-        param(repo={"license": {"key": "my_license"}},
-              license_key="my_license", expected=True),
-        param(repo={"license": {"key": "other_license"}},
-              license_key="my_license", expected=False)
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
     ])
     def test_has_license(
         self,
