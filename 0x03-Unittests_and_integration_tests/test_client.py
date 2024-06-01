@@ -5,7 +5,7 @@ Module for unit test for `client` module.
 import unittest
 from unittest.mock import MagicMock, PropertyMock, patch
 from typing import Dict
-from parameterized import parameterized
+from parameterized import parameterized, param
 
 
 GithubOrgClient = __import__('client').GithubOrgClient
@@ -108,3 +108,22 @@ class TestGithubOrgClient(unittest.TestCase):
             )
             mock_public_repos_url.assert_called_once()
         mock_get_payload.assert_called_once()
+
+    @parameterized.expand([
+        param(repo={"license": {"key": "my_license"}},
+              license_key="my_license", expected=True),
+        param(repo={"license": {"key": "other_license"}},
+              license_key="my_license", expected=False)
+    ])
+    def test_has_license(
+        self,
+        repo: Dict,
+        license_key: str,
+        expected: bool
+    ) -> None:
+        """
+        Test that `GithubOrgClient.has_license` returns the correct value.
+        """
+        ghorg_client_obj = GithubOrgClient("google")
+        has_license = ghorg_client_obj.has_license(repo, license_key)
+        self.assertEqual(has_license, expected)
