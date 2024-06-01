@@ -10,6 +10,7 @@ from parameterized import parameterized, param
 
 access_nested_map = __import__('utils').access_nested_map
 get_json = __import__('utils').get_json
+memoize = __import__('utils').memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -64,6 +65,33 @@ class TestGetJson(unittest.TestCase):
         with patch("requests.get", return_value=Mock(**attrs)) as mock_req:
             self.assertEqual(get_json(test_url), test_payload)
             mock_req.assert_called_once_with(test_url)
+
+
+class TestMemoize(unittest.TestCase):
+    """
+    Test class for `memoize` function.
+    """
+    def test_memoize(self):
+        """
+        Test output/return value of `memoize`
+        """
+        class TestClass:
+
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+        with patch.object(
+            TestClass,
+            "a_method",
+            return_value=lambda: 42
+        ) as memo_fn:
+            test_cls = TestClass()
+            self.assertEqual(test_cls.a_property(), 42)
+            self.assertEqual(test_cls.a_property(), 42)
+            memo_fn.assert_called_once()
 
 
 if __name__ == '__main__':
