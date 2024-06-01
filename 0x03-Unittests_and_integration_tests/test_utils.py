@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Module for unit test for `utils.access_nested_map`
+Module for unit test for `utils` module.
 """
 import unittest
 from unittest.mock import Mock, patch
