@@ -3,7 +3,7 @@
 Module for unit test for `client` module.
 """
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, PropertyMock, patch
 from typing import Dict
 from parameterized import parameterized
 
@@ -29,3 +29,20 @@ class TestGithubOrgClient(unittest.TestCase):
         ghorg_client_obj = GithubOrgClient(org)
         self.assertEqual(ghorg_client_obj.org(), resp)
         mock_get.assert_called_once_with(f"https://api.github.com/orgs/{org}")
+
+    def test_public_repos_url(self):
+        """
+        Test that `GithubOrgClient._public_repos_url`
+        returns the correct value.
+        """
+        with patch(
+            "client.GithubOrgClient.org",
+            new_callable=PropertyMock
+        ) as mock_org:
+            mock_org.return_value = {
+                "repos_url": "https://api.github.com/orgs/google/repos"
+            }
+            self.assertEqual(
+                GithubOrgClient("google")._public_repos_url,
+                "https://api.github.com/orgs/google/repos"
+            )
